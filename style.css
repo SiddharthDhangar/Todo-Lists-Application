@@ -93,6 +93,38 @@ form {
   transition: 200ms ease;
   color: var(--text-color);
 }
+
+
+.edit-button {
+  padding: 3px;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.edit-button svg {
+  fill: #4da6ff;
+  transition: 200ms ease;
+}
+
+.edit-button:hover svg {
+  fill: var(--accent-color);
+}
+
+.edit-input {
+  flex-grow: 1;
+  padding: 10px;
+  font: inherit;
+  background: var(--primary-color);
+  border: 2px solid var(--accent-color);
+  border-radius: 8px;
+  color: var(--text-color);
+}
+
+
 .delete-button {
   padding: 3px;
   background: none;
@@ -194,3 +226,4 @@ button {
     font-size: 15vw;
   }
 }
+
