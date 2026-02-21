@@ -29,7 +29,6 @@ themeSwitch.addEventListener("click", () => {
 });
 
 let allTodos = getTodos();
-console.log(allTodos);
 updateTodoList();
 
 todoForm.addEventListener("submit", function (e) {
@@ -154,3 +153,4 @@ function getTodos() {
   const todos = localStorage.getItem("Task") || "[]";
   return JSON.parse(todos);
 }
+
