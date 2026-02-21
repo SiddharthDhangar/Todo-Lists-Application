@@ -1,44 +1,48 @@
+// preventDefault: method of the Event interface tell the user agent that if the event does not get explicitly handled, its default action should not be taken as it normally would be
+
 const todoForm = document.querySelector("form");
 const todoInput = document.getElementById("todo-input");
 const todoListUL = document.getElementById("todo-list");
 
-let todosArray = getTodos();
+let allTodos = getTodos();
+console.log(allTodos);
 updateTodoList();
 
-todoForm.addEventListener("submit", (e) => {
+todoForm.addEventListener("submit", function (e) {
   e.preventDefault();
-  addTodos();
+  addTodo();
 });
 
-function addTodos() {
+function addTodo() {
   const todoText = todoInput.value.trim();
   if (todoText.length > 0) {
-    let todosObject = {
+    const todoObject = {
       text: todoText,
       completed: false,
     };
-    todosArray.push(todosObject);
+    allTodos.push(todoObject);
     updateTodoList();
     saveTodos();
+    todoInput.value = "";
   }
-  todoInput.value = "";
 }
 
 function updateTodoList() {
   todoListUL.innerHTML = "";
-  todosArray.forEach((todoText, todoIndex) => {
-    const todoItem = createTodoItem(todoText, todoIndex);
+  allTodos.forEach((todoObject, todoIndex) => {
+    todoItem = createTodoItem(todoObject, todoIndex);
     todoListUL.append(todoItem);
   });
 }
 
-function createTodoItem(todoText, todoIndex) {
+function createTodoItem(todoObject, todoIndex) {
+  let todoId = "todo-" + todoIndex;
   const todoLI = document.createElement("li");
+  const todoText = todoObject.text;
   todoLI.className = "todo";
-  let todoID = "todo-" + todoIndex;
-  let todoListText = todoText.text;
-  todoLI.innerHTML = ` <input type="checkbox" id="${todoID}" />
-          <label class="custom-checkbox" for="${todoID}">
+  todoLI.innerHTML = `
+  <input type="checkbox" id=${todoId} />
+          <label class="custom-checkbox" for=${todoId} >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="24px"
@@ -46,12 +50,25 @@ function createTodoItem(todoText, todoIndex) {
               width="24px"
               fill="transparent"
             >
-              <path d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z" />
+              <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
             </svg>
           </label>
-          <label for="${todoID}" class="todo-text">
-            ${todoListText}
+          <label for=${todoId} class="todo-text">
+            ${todoText}
           </label>
+          <button class="edit-button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              fill="var(--secondary-color)"
+            >
+              <path
+                d="M160-400v-80h280v80H160Zm0-160v-80h440v80H160Zm0-160v-80h440v80H160Zm360 560v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T863-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z"
+              />
+            </svg>
+          </button>
           <button class="delete-button">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -61,61 +78,55 @@ function createTodoItem(todoText, todoIndex) {
               fill="var(--secondary-color)"
             >
               <path
-                d="m376-300 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 180q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520Zm-400 0v520-520Z"
+                d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"
               />
             </svg>
-          </button>`;
+          </button>
+  `;
 
   const deleteButton = todoLI.querySelector(".delete-button");
   deleteButton.addEventListener("click", () => {
-    deleteTodoButton(todoIndex);
+    deleteTodoItem(todoIndex);
   });
 
   const checkbox = todoLI.querySelector("input");
   checkbox.addEventListener("change", () => {
-    todosArray[todoIndex].completed = checkbox.checked;
+    allTodos[todoIndex].completed = checkbox.checked;
     saveTodos();
   });
-  checkbox.checked = todoText.completed;
+  checkbox.checked = todoObject.completed;
+
+  const editButton = todoLI.querySelector(".edit-button");
+
+  editButton.addEventListener("click", () => {
+    editTodoItem(todoIndex);
+  });
+
   return todoLI;
 }
 
-function deleteTodoButton(todoIndex) {
-  todosArray = todosArray.filter((_, i) => i !== todoIndex);
+function editTodoItem(todoIndex) {
+  const newText = prompt("Edit your task:", allTodos[todoIndex].text);
 
+  if (newText !== null && newText.trim() !== "") {
+    allTodos[todoIndex].text = newText.trim();
+    saveTodos();
+    updateTodoList();
+  }
+}
+
+function deleteTodoItem(todoIndex) {
+  allTodos = allTodos.filter((_, i) => i !== todoIndex);
   saveTodos();
   updateTodoList();
 }
 
 function saveTodos() {
-  const TodosJson = JSON.stringify(todosArray);
-  localStorage.setItem("todoLists", TodosJson);
+  const todoJson = JSON.stringify(allTodos);
+  localStorage.setItem("Task", todoJson);
 }
 
 function getTodos() {
-  const todoLists = localStorage.getItem("todoLists") || "[]";
-  return JSON.parse(todoLists);
+  const todos = localStorage.getItem("Task") || "[]";
+  return JSON.parse(todos);
 }
-
-// DarkMode switch
-
-let darkmode = localStorage.getItem("darkmode");
-
-const themeSwitch = document.getElementById("theme-switch");
-
-const enableDarkmode = () => {
-  document.body.classList.add("darkmode");
-  localStorage.setItem("darkmode", "active");
-};
-
-const disableDarkmode = () => {
-  document.body.classList.remove("darkmode");
-  localStorage.setItem("darkmode", null);
-};
-
-if (darkmode === "active") enableDarkmode();
-
-themeSwitch.addEventListener("click", () => {
-  darkmode = localStorage.getItem("darkmode");
-  darkmode !== "active" ? enableDarkmode() : disableDarkmode();
-});
