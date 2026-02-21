@@ -4,6 +4,30 @@ const todoForm = document.querySelector("form");
 const todoInput = document.getElementById("todo-input");
 const todoListUL = document.getElementById("todo-list");
 
+// =======================
+// Theme Switch Logic
+// =======================
+
+const themeSwitch = document.getElementById("theme-switch");
+
+// Load saved theme when page loads
+let darkMode = localStorage.getItem("darkmode");
+
+if (darkMode === "active") {
+  document.body.classList.add("darkmode");
+}
+
+// Toggle theme on button click
+themeSwitch.addEventListener("click", () => {
+  document.body.classList.toggle("darkmode");
+
+  if (document.body.classList.contains("darkmode")) {
+    localStorage.setItem("darkmode", "active");
+  } else {
+    localStorage.setItem("darkmode", null);
+  }
+});
+
 let allTodos = getTodos();
 console.log(allTodos);
 updateTodoList();
