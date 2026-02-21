@@ -2,16 +2,19 @@
   --base-variant: #e8e9ed;
   --text-color: black;
   --secondary-color: #4a4d57;
-  --primary-color: #b2d6fd;
+  --primary-color: #1c1d20;
   --accent-color: #0071ff;
   --background: #edf0f8;
+  --theme-icon-color: var(--accent-color);
+  /* ADD THIS */
+  --todo-bg: #ccccff;
 }
 .darkmode {
   --background: #101114;
-  --primary-color: #1c1d20;
-  --secondary-color: #4a4d57;
   --accent-color: #00ffc4;
   --text-color: #f9f9f9;
+  --theme-icon-color: var(--primary-color);
+  --todo-bg: var(--primary-color);
 }
 * {
   margin: 0;
@@ -81,11 +84,12 @@ form {
 .todo {
   margin-bottom: 10px;
   padding: 0 16px;
-  background-color: var(--primary-color);
+  background-color: var(--todo-bg);
   border-radius: 15px;
   display: flex;
   align-items: center;
 }
+
 .todo .todo-text {
   padding: 15px;
   padding-right: 0;
@@ -93,7 +97,6 @@ form {
   transition: 200ms ease;
   color: var(--text-color);
 }
-
 
 .edit-button {
   padding: 3px;
@@ -106,7 +109,7 @@ form {
 }
 
 .edit-button svg {
-  fill: #4da6ff;
+  fill: var(--);
   transition: 200ms ease;
 }
 
@@ -123,7 +126,6 @@ form {
   border-radius: 8px;
   color: var(--text-color);
 }
-
 
 .delete-button {
   padding: 3px;
@@ -197,7 +199,7 @@ button {
   right: 20px;
 }
 #theme-switch svg {
-  fill: var(--primary2-color);
+  fill: var(--theme-icon-color);
 }
 #theme-switch svg:last-child {
   display: none;
@@ -226,4 +228,3 @@ button {
     font-size: 15vw;
   }
 }
-
